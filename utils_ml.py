@@ -37,8 +37,8 @@ def preprocess_data(df, x_col, y_col, nans):
 
 def train_valid_test_split(X, y, test=False):
     if test:
-        X_train_full, X_test, y_train_full, y_test = train_test_split(X, y, test_size = 0.2, random_state=42)
-        X_train, X_valid, y_train, y_valid = train_test_split(X_train_full, y_train_full, test_size=0.25, random_state=42)
+        X_train_full, X_test, y_train_full, y_test = train_test_split(X, y, test_size = 0.2, random_state=42, shuffle=True)
+        X_train, X_valid, y_train, y_valid = train_test_split(X_train_full, y_train_full, test_size=0.25, random_state=42, shuffle=True)
         return X_train, X_valid, X_test, y_train, y_valid, y_test
     else:
         X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -53,17 +53,23 @@ def scale(X_train, X_valid, X_test=None):
         X_test = scaler.transform(X_test)
     return X_train, X_valid, X_test
 
+def metrics_classification(pred, true):
+    acc = accuracy_score(pred, true)
+    return acc
+
 def rf_class(X_train, X_valid, X_test, y_train, y_valid, y_test):
 
     clf = RandomForestClassifier()
 
     clf.fit(X_train, y_train)
+    y_pred_train = clf.predict(X_train)
     y_pred_valid = clf.predict(X_valid)
-    accuracy_valid = accuracy_score(y_pred_valid, y_valid)
-    accuracy_test = None
+    acc_train = metrics_classification(y_pred_train, y_train)
+    acc_valid = metrics_classification(y_pred_valid, y_valid)
+    acc_test = None
     if X_test is not None:
         y_pred_test = clf.predict(X_test)
-        accuracy_test = accuracy_score(y_pred_test, y_test)
+        acc_test = metrics_classification(y_pred_test, y_test)
 
-    return accuracy_valid, accuracy_test
+    return acc_train, acc_valid, acc_test
     

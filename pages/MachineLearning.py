@@ -38,6 +38,8 @@ if st.session_state['x_col']!='':
     if nans == 'remove':
         st.session_state['y'], st.session_state['X'] = preprocess_data(df, st.session_state['x_col'], st.session_state['y_col'], nans)
         st.markdown("Missing data was removed.")
+        st.markdown(f"Target data shape: {st.session_state['y'].shape}")
+        st.markdown(f"Input data shape: {st.session_state['X'].shape}")
 
 ## split data
 if st.session_state['x_col']!='':
@@ -53,9 +55,9 @@ if st.session_state['x_col']!='':
         st.session_state['X_train'] = X_train
         st.session_state['X_valid'] = X_valid
         st.session_state['X_test'] = X_test
-        st.session_state['y_train'] = X_train
-        st.session_state['y_valid'] = X_valid
-        st.session_state['y_test'] = X_test
+        st.session_state['y_train'] = y_train
+        st.session_state['y_valid'] = y_valid
+        st.session_state['y_test'] = y_test
         if 'X_train' in st.session_state:
             st.markdown(f"Train data length: {len(X_train)}")
             st.markdown(f"Valid data length: {len(X_valid)}")
@@ -107,11 +109,17 @@ if clf=="Decission Tree":
     pass
 if clf=="Random Forest":
     if 'X_train' in st.session_state:
-        rf_class(st.session_state['X_train'], 
+        acc_train, acc_valid, acc_test = rf_class(st.session_state['X_train'], 
                 st.session_state['X_valid'],
                 st.session_state['X_test'],
                 st.session_state['y_train'],
                 st.session_state['y_valid'],
                 st.session_state['y_test'])
+        st.markdown("**Modelling results:**")
+        st.markdown("Accuracy:")
+        st.markdown(f"Training: {acc_train:.3f}")
+        st.markdown(f"Validation: {acc_valid:.3f}")
+        if splits=="Training, Validation and Test":
+            st.markdown(f"Test: {acc_test:.3f}")
     else:
         st.markdown("**Please select a target and input data before selecting a model.**")

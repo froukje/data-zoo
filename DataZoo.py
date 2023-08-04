@@ -32,11 +32,4 @@ s = df.style.format(precision=3)\
       .background_gradient(cmap=cm)\
       .bar(align="mid", color=["red", "lightgreen"])\
       .set_properties(**properties)
-      #.set_table_styles(
-      # [{
-      #     'selector': 'th',
-      #     'props': [
-      #         ('background-color', 'black'),
-      #         ('color', 'cyan')]
-      # }])
 st.dataframe(s) 
