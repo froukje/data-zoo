@@ -76,14 +76,9 @@ if 'X_train' in st.session_state:
             st.markdown("Your data is not split yet")
 
 ## choose model
-regression_model = ['',
-                    'Linear Regression', 
-                    'Decission Tree', 
-                    'Random Forest']
+regression_model = ['']
 
 classification_model = ['',
-                        'Logistic Regression',
-                        'Decision Tree',
                         'Random Forest']
 
 st.sidebar.markdown("**Regression**")
