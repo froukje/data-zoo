@@ -1,0 +1,42 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+#DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
+#            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
+DATA_URL = '/home/frauke/data-app/data/water_potability.csv'
+
+st.sidebar.markdown("# Home :flamingo:")
+
+st.markdown("# Data Zoo  :flamingo::orangutan::otter::penguin::llama:")
+st.markdown("### Easy explore your data with DataZoo!")
+st.markdown("Upload your own data (.csv-format), visualize it, make statistical analysis and Machine Learning!")
+st.markdown("To explore the possibilites, you can use the data provided by default. This is ... from ...")
+
+uploaded_file = st.file_uploader("Choose a file")
+
+if uploaded_file is None:
+    df = pd.read_csv(DATA_URL)
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+
+st.session_state["dataframe"] = df
+
+# show Dataframe
+cm = sns.light_palette("green", as_cmap=True)
+properties = {"border": "2px solid gray"}
+s = df.style.format(precision=3)\
+      .highlight_null(color='red')\
+      .background_gradient(cmap=cm)\
+      .bar(align="mid", color=["red", "lightgreen"])\
+      .set_properties(**properties)
+      #.set_table_styles(
+      # [{
+      #     'selector': 'th',
+      #     'props': [
+      #         ('background-color', 'black'),
+      #         ('color', 'cyan')]
+      # }])
+st.dataframe(s) 
