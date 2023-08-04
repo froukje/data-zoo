@@ -5,7 +5,7 @@ import seaborn as sns
 
 #DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
 #            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
-DATA_URL = '/home/frauke/data-app/data/water_potability.csv'
+DATA_URL = 'data/water_potability.csv'
 
 st.sidebar.markdown("# Home :flamingo:")
 
