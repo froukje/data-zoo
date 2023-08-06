@@ -11,9 +11,9 @@ st.sidebar.markdown("# Home")
 
 st.markdown("# Datenraum")
 
-st.markdown("⚠️  THIS PAGE IS UNDER DEVEPMENT! ⚠️ ")
+st.markdown("### ⚠️  THIS PAGE IS UNDER DEVEPMENT! ⚠️ ")
 
-st.markdown("### Easy explore your data with DataZoo!")
+st.markdown("### Easy explore your data with Datenraum!")
 st.markdown("Upload your own data (.csv-format), visualize it, make statistical analysis and Machine Learning!")
 st.markdown("To explore the possibilites, you can use the data provided by default. The data loaded by default describes several paramters of water quality and a column that says whether the water quality is good or bad. The data is downloaded from [kaggle](https://www.kaggle.com/datasets/adityakadiwal/water-potability). You can find a more detailed description there. This data describes a classification problem.")
 

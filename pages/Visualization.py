@@ -4,8 +4,8 @@ from utils_viz import (line,
                    hist, 
                    ridgeline)
 
-st.sidebar.markdown("# Visualization :otter:")
-st.markdown("# Visualization :otter:")
+st.sidebar.markdown("# Visualization")
+st.markdown("# Visualization")
 
 if "dataframe" in st.session_state:
     df=st.session_state["dataframe"]

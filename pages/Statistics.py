@@ -4,8 +4,8 @@ import pandas as pd
 if "dataframe" in st.session_state:
     df=st.session_state["dataframe"]
 
-st.markdown("# Statistics :llama:")
-st.sidebar.markdown("# Statistics :llama:")
+st.markdown("# Statistics")
+st.sidebar.markdown("# Statistics")
 
 if st.sidebar.checkbox('Data Types'):
     st.markdown("### Data Types")

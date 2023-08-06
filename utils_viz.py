@@ -27,7 +27,7 @@ def scatter(df):
     y = df[y_col].values
     try: 
         fig, ax = plt.subplots()
-        ax.scatter(x, y, s=5)
+        ax.scatter(x, y, s=5, color=config.COLOR)
         ax.set_xlabel(x_col)
         ax.set_ylabel(y_col)
         st.pyplot(fig)
@@ -41,7 +41,7 @@ def hist(df):
             df.columns)
     try:
         fig, ax = plt.subplots()
-        ax.hist(df[col], bins=bins)
+        ax.hist(df[col], bins=bins, color=config.COLOR)
         #ax.xticks(rotate=90)
         st.pyplot(fig)
     except:
