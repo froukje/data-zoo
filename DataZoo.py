@@ -11,8 +11,8 @@ st.sidebar.markdown("# Home :flamingo:")
 
 st.markdown("# Data Zoo  :flamingo::orangutan::otter::penguin::llama:")
 st.markdown("### Easy explore your data with DataZoo!")
-st.markdown("Upload your own data (.csv-format), visualize it, make statistical analysis and Machine Learning!")
-st.markdown("To explore the possibilites, you can use the data provided by default. This is ... from ...")
+st.markdown("Upload your own data (.csv-format) and visualize it!")
+st.markdown("To explore the possibilites, you can use the data provided by default. The data loaded by default describes several paramters of water quality and a column that says whether the water quality is good or bad. The data is downloaded from [kaggle](https://www.kaggle.com/datasets/adityakadiwal/water-potability). You can find a more detailed description there. This data describes a classification problem.")
 
 uploaded_file = st.file_uploader("Choose a file")
 
