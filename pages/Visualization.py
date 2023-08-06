@@ -23,12 +23,12 @@ plot_type_single = ['','Linechart', 'Scatterplot', 'Histogram']
 
 plot_type_multiple = ['','Ridgeline']
 
-st.sidebar.markdown("**Plot Single Column**")
+st.sidebar.markdown("**Single Plot**")
 s_plot = st.sidebar.selectbox(
             'Select a Plot Type',
             plot_type_single)
 
-st.sidebar.markdown("**Plot Multiple Columns**")
+st.sidebar.markdown("**Multiple Plots**")
 m_plot = st.sidebar.selectbox(
             'Select a Plot Type',
             plot_type_multiple)

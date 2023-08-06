@@ -4,14 +4,49 @@ import seaborn as sns
 import joypy
 import config
 
-def line(df):
-    col = st.selectbox(
-        'Select a column to draw a linechart',
+def select_vars(df):
+    '''
+    slect valraibles for a single plot
+    ::in parameters:: dataframe
+    ::returns:: 
+        x - dataframe column for x axis
+        y - dataframe column for y axis
+        sep - dataframe column to group plot
+    '''
+    col_y = st.selectbox(
+        'Select a column for the y axis',
         df.columns)
-    y = df[col].values
+    y = col_y
+    x_list = ['index']
+    x_list.extend(list(set(df.columns.to_list()) - set(col_y)))
+    col_x = st.selectbox(
+        'Select a column for the x axis',
+        x_list)
+    if col_x == 'index':
+        x = df.index
+    else:
+        x = col_x
+    sep_list = [None]
+    sep_list.extend(list(set(df.columns.to_list()) - set(col_y) - set(col_x)))
+    sep = st.selectbox(
+        'Select a variable to group data',
+        sep_list)
+    return x, y, sep 
+
+def line(df):
+    '''
+    draw a linechart
+    ::in parameter:: dataframe
+    '''
+    if st.checkbox('Show explanation'):
+        st.markdown('A **linechart** is a graphical representation, which connects a series of datapoints. It is often used for time dependend data. The x-axis is then chosen to be the time. It can particulary be used to show trends over time.') 
+        st.markdown('Here you can choose a variable for the x-axis, for the y-axis and an optional variable to group the data. Grouping can be useful, when you want to see the effect of the y-variable on different classes in another variable. In the default data loaded you could choose "Potability" as grouping variable.')
+    x, y, sep = select_vars(df)
+
     try:
         fig, ax = plt.subplots()
-        ax.plot(y, color=config.COLOR) 
+        sns.set_palette(config.PALETTE)
+        sns.lineplot(data=df, y=y, x=x, hue=sep, ax=ax)
         st.pyplot(fig)
     except:
         st.write("It is not possible to draw a linechart with the selected column")

@@ -1,1 +1,2 @@
 COLOR="#25BCB9"
+PALETTE="Set2"
