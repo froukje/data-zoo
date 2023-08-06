@@ -11,7 +11,7 @@ st.sidebar.markdown("# Home")
 
 st.markdown("# Datenraum")
 
-st.markdown("### ⚠️  THIS PAGE IS UNDER DEVEPMENT! ⚠️ ")
+st.markdown("### ⚠️  THIS PAGE IS UNDER DEVELOPMENT! ⚠️ ")
 
 st.markdown("### Easy explore your data with Datenraum!")
 st.markdown("Upload your own data (.csv-format), visualize it, make statistical analysis and Machine Learning!")
