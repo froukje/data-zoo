@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_extras.stoggle import stoggle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joypy
