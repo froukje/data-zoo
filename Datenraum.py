@@ -16,7 +16,6 @@ st.markdown("### ⚠️  THIS PAGE IS UNDER DEVELOPMENT! ⚠️ ")
 st.markdown("### Easy explore your data with Datenraum!")
 st.markdown("Upload your own data (.csv-format), visualize it, make statistical analysis and Machine Learning!")
 st.markdown("To explore the possibilites, you can use the data provided by default. The data loaded by default describes several paramters of water quality and a column that says whether the water quality is good or bad. The data is downloaded from [kaggle](https://www.kaggle.com/datasets/adityakadiwal/water-potability). You can find a more detailed description there. This data describes a classification problem.")
-st.markdown("Or upload your own data ...")
 uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is None:

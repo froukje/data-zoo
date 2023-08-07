@@ -71,7 +71,7 @@ def scatter(df):
     ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
-        st.markdown('...')
+        st.markdown('A scatterplot visualizes data points using dots of two (different) numeric variables. The position of each value of the two variables on the x- and y-axis defines the value for each data point in the scatter plot. Scatter plots are used to observe relationships between variables.')
     
     x, y, sep = select_vars(df, type='scatter')
 
@@ -89,20 +89,15 @@ def hist(df):
     ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
-        st.markdown('...')
+        st.markdown('A histogram shows the frequency distribution of a variable. The values are grouped into bins and each bin is represented by a bar, that indicates the number of data points within that bin.')
 
     x, y, sep = select_vars(df, type='hist')
 
     bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
-    #col = st.selectbox(
-    #        'Select a column to draw a histogram',
-    #        df.columns)
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
         sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins)
-        #ax.hist(df[col], bins=bins, color=config.COLOR)
-        #ax.xticks(rotate=90)
         st.pyplot(fig)
     except:
         st.write("It is not possible tp draw a histogram with the selected variable")
