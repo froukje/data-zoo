@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joypy
 import config
+import explanations
 
 def select_vars(df, type='line'):
     '''
@@ -75,8 +76,8 @@ def line(df):
     draw a linechart 
     ::in param:: dataframe
     '''
-    if st.checkbox('Show explanation'):
-        st.markdown("A **linechart** is a graphical representation, which connects a series of datapoints. It is often used for time dependend data. The x-axis is then chosen to be the time. It can particulary be used to show trends over time.\nHere you can choose a variable for the x-axis, for the y-axis and an optional variable to group the data. Grouping can be useful, when you want to see the effect of the y-variable on different classes in another variable. In the default data loaded you could choose 'Potability' as grouping variable.")
+    if st.checkbox("Show explanation for 'Linechart'"):
+        st.markdown(explanations.LINECHART)
     x, y, sep = select_vars(df, type='line')
 
     try:
@@ -92,8 +93,8 @@ def scatter(df):
     plot a scatterplot of two selected variables grouped by an optinal third variable.
     ::in param:: dataframe
     '''
-    if st.checkbox('Show explanation'):
-        st.markdown('A **scatterplot** visualizes data points using dots of two (different) numeric variables. The position of each value of the two variables on the x- and y-axis defines the value for each data point in the scatter plot. Scatter plots are used to observe relationships between variables.')
+    if st.checkbox("Show explanation for 'Scatterplot'"):
+        st.markdown(explanations.SCATTERPLOT)
     
     x, y, sep = select_vars(df, type='scatter')
 
@@ -110,8 +111,8 @@ def hist(df):
     plot a histogram of.
     ::in param:: dataframe
     '''
-    if st.checkbox('Show explanation'):
-        st.markdown('A **histogram** shows the frequency distribution of a variable. The values are grouped into bins and each bin is represented by a bar, that indicates the number of data points within that bin.')
+    if st.checkbox(2Show explanation for 'Histogram'"):
+        st.markdown(explanations.HISTOGRAM)
 
     x, y, sep = select_vars(df, type='hist')
 
@@ -128,15 +129,14 @@ def ridgeline(df):
     '''
     ridgeline plot
     '''
-    if st.checkbox("Show explanation"):
-        st.markdown("A **Ridgeline plot** shows the distribution  of one or more numeric variables. You can either choose a set of columns in order to see their distributions vertically ordered or you can choose a variable to see the distribution for each value in the grouped column.")
-        st.markdown("For example in the default example you can plot the distributions of the different water parameters or you can group them by the variable 'Potability'")
+    if st.checkbox("Show explanation for 'Ridgeline Plot'"):
+        st.markdown(explanations.RIDGELINE)
     
     st.markdown("Choose the variables you would like to plot")
     data, by = select_vars_for_multiple_plots(df)
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
-        fig, ax = joypy.joyplot(df, by=by, column=data) #joypy.joyplot(data, by=by)
+        fig, ax = joypy.joyplot(df, by=by, column=data)
         st.pyplot(fig)
     except:
         st.write("It is not possible to draw a Ridgeline plot")
