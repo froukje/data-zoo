@@ -4,7 +4,7 @@ import seaborn as sns
 import joypy
 import config
 
-def select_vars(df):
+def select_vars(df, type='line'):
     '''
     slect valraibles for a single plot
     ::in parameters:: dataframe
@@ -17,17 +17,31 @@ def select_vars(df):
         'Select a column for the y axis',
         df.columns)
     y = col_y
-    x_list = ['index']
-    x_list.extend(list(set(df.columns.to_list()) - set(col_y)))
+    if type=='line':
+        x_list = ['index']
+        x_list.extend(list(set(df.columns.to_list()) - set(col_y)))
+    if type=='scatter':
+        x_list = df.columns
+    if type=='hist':
+        x_list = [None]
+        x_list.extend(df.columns.to_list())
+
     col_x = st.selectbox(
         'Select a column for the x axis',
         x_list)
+
+    sns.set_palette(config.PALETTE)
     if col_x == 'index':
         x = df.index
     else:
         x = col_x
+
     sep_list = [None]
-    sep_list.extend(list(set(df.columns.to_list()) - set(col_y) - set(col_x)))
+    if col_x:
+        sep_list.extend(list(set(df.columns.to_list()) - set(col_y) - set(col_x)))
+    else:
+        sep_list.extend(list(set(df.columns.to_list()) - set(col_y)))
+
     sep = st.selectbox(
         'Select a variable to group data',
         sep_list)
@@ -35,13 +49,13 @@ def select_vars(df):
 
 def line(df):
     '''
-    draw a linechart
-    ::in parameter:: dataframe
+    draw a linechart 
+    ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
         st.markdown('A **linechart** is a graphical representation, which connects a series of datapoints. It is often used for time dependend data. The x-axis is then chosen to be the time. It can particulary be used to show trends over time.') 
         st.markdown('Here you can choose a variable for the x-axis, for the y-axis and an optional variable to group the data. Grouping can be useful, when you want to see the effect of the y-variable on different classes in another variable. In the default data loaded you could choose "Potability" as grouping variable.')
-    x, y, sep = select_vars(df)
+    x, y, sep = select_vars(df, type='line')
 
     try:
         fig, ax = plt.subplots()
@@ -52,31 +66,42 @@ def line(df):
         st.write("It is not possible to draw a linechart with the selected column")
 
 def scatter(df):
-    x_col = st.selectbox(
-            'Select a column for the x-axis',
-            df.columns)
-    y_col = st.selectbox(
-            'Select a column for the y-axis',
-            df.columns)
-    x = df[x_col].values
-    y = df[y_col].values
+    '''
+    plot a scatterplot of two selected variables grouped by an optinal third variable.
+    ::in param:: dataframe
+    '''
+    if st.checkbox('Show explanation'):
+        st.markdown('...')
+    
+    x, y, sep = select_vars(df, type='scatter')
+
     try: 
         fig, ax = plt.subplots()
-        ax.scatter(x, y, s=5, color=config.COLOR)
-        ax.set_xlabel(x_col)
-        ax.set_ylabel(y_col)
+        sns.set_palette(config.PALETTE)
+        sns.scatterplot(data=df, x=x, y=y, hue=sep, ax=ax)
         st.pyplot(fig)
     except:
         st.write("It is not possible to draw a scatterplot with the selected variables.")
 
 def hist(df):
+    '''
+    plot a histogram of.
+    ::in param:: dataframe
+    '''
+    if st.checkbox('Show explanation'):
+        st.markdown('...')
+
+    x, y, sep = select_vars(df, type='hist')
+
     bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
-    col = st.selectbox(
-            'Select a column to draw a histogram',
-            df.columns)
+    #col = st.selectbox(
+    #        'Select a column to draw a histogram',
+    #        df.columns)
     try:
         fig, ax = plt.subplots()
-        ax.hist(df[col], bins=bins, color=config.COLOR)
+        sns.set_palette(config.PALETTE)
+        sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins)
+        #ax.hist(df[col], bins=bins, color=config.COLOR)
         #ax.xticks(rotate=90)
         st.pyplot(fig)
     except:
