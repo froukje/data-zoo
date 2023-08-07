@@ -12,6 +12,7 @@ if "dataframe" in st.session_state:
 
 st.markdown("### What would you like to plot?")
 st.markdown("Select from the options in the sidebar to plot your data.")
+
 st.markdown("---")
 if st.sidebar.checkbox('Show Dataframe'):
     st.dataframe(df)
@@ -23,12 +24,12 @@ plot_type_single = ['','Linechart', 'Scatterplot', 'Histogram']
 
 plot_type_multiple = ['','Ridgeline']
 
-st.sidebar.markdown("**Single Plot**")
+st.sidebar.markdown("**Plot one or two Variables**")
 s_plot = st.sidebar.selectbox(
             'Select a Plot Type',
             plot_type_single)
 
-st.sidebar.markdown("**Multiple Plots**")
+st.sidebar.markdown("**Plot Multiple Variables**")
 m_plot = st.sidebar.selectbox(
             'Select a Plot Type',
             plot_type_multiple)

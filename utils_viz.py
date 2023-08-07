@@ -17,6 +17,7 @@ def select_vars(df, type='line'):
         'Select a column for the y axis',
         df.columns)
     y = col_y
+    
     if type=='line':
         x_list = ['index']
         x_list.extend(list(set(df.columns.to_list()) - set(col_y)))
@@ -47,6 +48,29 @@ def select_vars(df, type='line'):
         sep_list)
     return x, y, sep 
 
+def select_vars_for_multiple_plots(df):
+    '''
+    select variables to plot
+    '''
+    data_cols = []
+    for col in df.columns:
+        if st.checkbox(col):
+            data_cols.append(col)
+
+    data = df[data_cols]
+
+    x_list = ['index']
+    x_list.extend(list(set(df.columns.to_list()) - set(data_cols)))
+    col_x = st.selectbox(
+            'Select a variable to group data',
+            x_list)
+    if col_x == 'index':
+        by = None
+    else:
+        by = col_x
+
+    return data, by
+
 def line(df):
     '''
     draw a linechart 
@@ -71,7 +95,7 @@ def scatter(df):
     ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
-        st.markdown('A scatterplot visualizes data points using dots of two (different) numeric variables. The position of each value of the two variables on the x- and y-axis defines the value for each data point in the scatter plot. Scatter plots are used to observe relationships between variables.')
+        st.markdown('A **scatterplot** visualizes data points using dots of two (different) numeric variables. The position of each value of the two variables on the x- and y-axis defines the value for each data point in the scatter plot. Scatter plots are used to observe relationships between variables.')
     
     x, y, sep = select_vars(df, type='scatter')
 
@@ -89,7 +113,7 @@ def hist(df):
     ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
-        st.markdown('A histogram shows the frequency distribution of a variable. The values are grouped into bins and each bin is represented by a bar, that indicates the number of data points within that bin.')
+        st.markdown('A **histogram** shows the frequency distribution of a variable. The values are grouped into bins and each bin is represented by a bar, that indicates the number of data points within that bin.')
 
     x, y, sep = select_vars(df, type='hist')
 
@@ -103,9 +127,18 @@ def hist(df):
         st.write("It is not possible tp draw a histogram with the selected variable")
 
 def ridgeline(df):
+    '''
+    ridgeline plot
+    '''
+    if st.checkbox('Show explanation'):
+        st.markdown('A **Ridgeline plot** shows the distribution  of one or more numeric variables. You can einther choose a set of columns in order to see their distributions or you can choose a varibale to see the distribution for each value in the grouped column')
+        
+    st.markdown('---')
+    data, by = select_vars_for_multiple_plots(df)
+
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
-        fig, ax = joypy.joyplot(df)
+        fig, ax = joypy.joyplot(data, by=by)
         st.pyplot(fig)
     except:
         st.write("It is not possible to draw a Ridgeline plot")
