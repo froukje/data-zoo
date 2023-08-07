@@ -1,5 +1,7 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
+import mpld3
 import seaborn as sns
 import joypy
 import config
@@ -83,7 +85,8 @@ def line(df):
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
         sns.lineplot(data=df, y=y, x=x, hue=sep, ax=ax)
-        st.pyplot(fig)
+        fig_html = mpld3.fig_to_html(fig)
+        components.html(fig_html, height=600)
     except:
         st.write("It is not possible to draw a linechart with the selected column")
 
@@ -101,7 +104,8 @@ def scatter(df):
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
         sns.scatterplot(data=df, x=x, y=y, hue=sep, ax=ax)
-        st.pyplot(fig)
+        fig_html = mpld3.fig_to_html(fig)
+        components.html(fig_html, height=600)
     except:
         st.write("It is not possible to draw a scatterplot with the selected variables.")
 
@@ -120,7 +124,9 @@ def hist(df):
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
         sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins)
-        st.pyplot(fig)
+        fig_html = mpld3.fig_to_html(fig)
+        components.html(fig_html, height=600)
+
     except:
         st.write("It is not possible tp draw a histogram with the selected variable")
 
@@ -136,7 +142,9 @@ def ridgeline(df):
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
         fig, ax = joypy.joyplot(df, by=by, column=data)
-        st.pyplot(fig)
+        fig_html = mpld3.fig_to_html(fig)
+        components.html(fig_html, height=600)
+
     except:
         st.write("It is not possible to draw a Ridgeline plot")
 
