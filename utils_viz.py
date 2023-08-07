@@ -111,7 +111,7 @@ def hist(df):
     plot a histogram of.
     ::in param:: dataframe
     '''
-    if st.checkbox(2Show explanation for 'Histogram'"):
+    if st.checkbox("Show explanation for 'Histogram'"):
         st.markdown(explanations.HISTOGRAM)
 
     x, y, sep = select_vars(df, type='hist')
