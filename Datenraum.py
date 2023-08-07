@@ -3,6 +3,10 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 
+st.set_page_config(page_title="data app for visualisation and machine learning")
+#st.header("Datenraum")
+#st.subheader("Data app for Visualisation and Machine Learning")
+
 #DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
 #            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
 DATA_URL = 'data/water_potability.csv'
