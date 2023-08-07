@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_extras.stoggle import stoggle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joypy
@@ -57,8 +58,6 @@ def select_vars_for_multiple_plots(df):
         if st.checkbox(col):
             data_cols.append(col)
 
-    data = df[data_cols]
-
     x_list = ['index']
     x_list.extend(list(set(df.columns.to_list()) - set(data_cols)))
     col_x = st.selectbox(
@@ -69,7 +68,7 @@ def select_vars_for_multiple_plots(df):
     else:
         by = col_x
 
-    return data, by
+    return data_cols, by
 
 def line(df):
     '''
@@ -77,8 +76,7 @@ def line(df):
     ::in param:: dataframe
     '''
     if st.checkbox('Show explanation'):
-        st.markdown('A **linechart** is a graphical representation, which connects a series of datapoints. It is often used for time dependend data. The x-axis is then chosen to be the time. It can particulary be used to show trends over time.') 
-        st.markdown('Here you can choose a variable for the x-axis, for the y-axis and an optional variable to group the data. Grouping can be useful, when you want to see the effect of the y-variable on different classes in another variable. In the default data loaded you could choose "Potability" as grouping variable.')
+        st.markdown("A **linechart** is a graphical representation, which connects a series of datapoints. It is often used for time dependend data. The x-axis is then chosen to be the time. It can particulary be used to show trends over time.\nHere you can choose a variable for the x-axis, for the y-axis and an optional variable to group the data. Grouping can be useful, when you want to see the effect of the y-variable on different classes in another variable. In the default data loaded you could choose 'Potability' as grouping variable.")
     x, y, sep = select_vars(df, type='line')
 
     try:
@@ -130,15 +128,15 @@ def ridgeline(df):
     '''
     ridgeline plot
     '''
-    if st.checkbox('Show explanation'):
-        st.markdown('A **Ridgeline plot** shows the distribution  of one or more numeric variables. You can einther choose a set of columns in order to see their distributions or you can choose a varibale to see the distribution for each value in the grouped column')
-        
-    st.markdown('---')
+    if st.checkbox("Show explanation"):
+        st.markdown("A **Ridgeline plot** shows the distribution  of one or more numeric variables. You can either choose a set of columns in order to see their distributions vertically ordered or you can choose a variable to see the distribution for each value in the grouped column.")
+        st.markdown("For example in the default example you can plot the distributions of the different water parameters or you can group them by the variable 'Potability'")
+    
+    st.markdown("Choose the variables you would like to plot")
     data, by = select_vars_for_multiple_plots(df)
-
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
-        fig, ax = joypy.joyplot(data, by=by)
+        fig, ax = joypy.joyplot(df, by=by, column=data) #joypy.joyplot(data, by=by)
         st.pyplot(fig)
     except:
         st.write("It is not possible to draw a Ridgeline plot")

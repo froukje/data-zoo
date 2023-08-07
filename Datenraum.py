@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 
+import config
+
 st.set_page_config(page_title="data app for visualisation and machine learning")
 #st.header("Datenraum")
 #st.subheader("Data app for Visualisation and Machine Learning")
@@ -31,7 +33,7 @@ if uploaded_file is not None:
 st.session_state["dataframe"] = df
 
 # show Dataframe
-cm = sns.light_palette("green", as_cmap=True)
+cm = sns.light_palette(config.COLOR, as_cmap=True)
 properties = {"border": "2px solid gray"}
 s = df.style.format(precision=3)\
       .highlight_null(color='red')\
