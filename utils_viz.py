@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from streamlit_toggle import st_toggle_switch
 import matplotlib.pyplot as plt
 import numpy as np
 import mpld3
@@ -56,11 +57,8 @@ def select_vars_for_multiple_plots(df, type_='group'):
     '''
     select variables to plot
     '''
-    data_cols = []
-    for col in df.columns:
-        if st.checkbox(col):
-            data_cols.append(col)
 
+    data_cols = st.multiselect("Columns:", df.columns)
     x_list = ['index']
     x_list.extend(list(set(df.columns.to_list()) - set(data_cols)))
     if type_=='group':
@@ -146,8 +144,9 @@ def ridgeline(df):
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
         fig, ax = joypy.joyplot(df, by=by, column=data)
-        fig_html = mpld3.fig_to_html(fig)
-        components.html(fig_html, height=600)
+        st.pyplot(fig)
+        #fig_html = mpld3.fig_to_html(fig)
+        #components.html(fig_html, height=600)
 
     except:
         st.write("It is not possible to draw a Ridgeline plot")
@@ -157,32 +156,48 @@ def hist_multiple(df):
     plot histograms of multiple variables in df
     ::in params:: dataframe
     '''
-    if st.checkbox("Show explanation for 'Historam'"):
+    if st.checkbox("Show explanation for 'Histogram'"):
         st.markdown(explanations.HISTOGRAM)
     
     data = select_vars_for_multiple_plots(df, type_='no_group')
     nr_vars = df[data].values.shape[1]
     st.markdown('---')
 
-    if st.checkbox('All in one plot'):
+    alpha = st.slider('transparency', min_value=0.0, max_value=1.0, step=0.1, value=0.8, help="select the transparency (alpha) value")
+    hist_switch = st_toggle_switch(
+       label="Show all variables in one plot",
+        key="one_plot",
+        default_value=False,
+        label_after=False,
+        inactive_color="#D3D3D3",  # optional
+        active_color=config.COLOR,  # optional
+        track_color="#29B5E8",  # optional
+    )
+    if hist_switch:
         try:
-            fig, ax = plt.subplots()
-            for i in range(nr_vars):
-                ax.hist(df[data].values[:, i], alpha=1/nr_vars)
-                fig_html = mpld3.fig_to_html(fig)
-                components.html(fig_html, height=600)
-        except:
-            st.write("It is not possible tp draw a histogram with the selected variable")
 
-    if st.checkbox('Multiple plots'):
-        rows = np.ceil(nr_vars/3)
-        try:
-            fig, axes = plt.suplots(rows, 3)
-            for i, ax in enumertae(axes.flatten()):
-                ax.hist(df[data].values[:, i], color=config.COLOR)
+            bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
+            fig, ax = plt.subplots()
+            sns.set_palette(config.PALETTE)
+            sns.histplot(data=df[data], alpha=alpha, bins=bins, ax=ax)
             fig_html = mpld3.fig_to_html(fig)
             components.html(fig_html, height=600)
         except:
             st.write("It is not possible tp draw a histogram with the selected variable")
+
+    else:
+        rows = int(np.ceil(nr_vars/3))
+        try:
+            fig = plt.figure()
+            plt.subplots_adjust(hspace=0.5)
+            sns.set_palette(config.PALETTE)
+            bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
+            for i in range(nr_vars):
+                ax = plt.subplot(rows, 3, i+1)
+                sns.histplot(data=df[data].values[:, i], color=config.COLOR, ax=ax, alpha=alpha, bins=bins)
+            fig_html = mpld3.fig_to_html(fig)
+            components.html(fig_html, height=200*rows)
+        except:
+            st.write("It is not possible to draw a histogram with the selected variable")
 
 
