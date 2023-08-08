@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
+from streamlit_extras.buy_me_a_coffee import button
 import streamlit_analytics
 import pandas as pd
 import numpy as np
@@ -45,4 +46,6 @@ s = df.style.format(precision=3)\
       .set_properties(**properties)
 st.dataframe(s)
 
+
+button(username="pumaline", floating=False, width=221)
 streamlit_analytics.stop_tracking()

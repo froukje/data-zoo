@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
+from streamlit_extras.buy_me_a_coffee import button
 import streamlit_analytics
 from utils_ml import (select_data,
                       preprocess_data,
@@ -125,4 +126,5 @@ st.markdown("### :fire: IN PREPARATION :fire:")
 #            st.markdown(f"Test: {acc_test:.3f}")
 #    else:
 #        st.markdown("**Please select a target and input data before selecting a model.**")
+button(username="fake-username", floating=False, width=221)
 streamlit_analytics.stop_tracking()

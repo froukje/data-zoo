@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
+from streamlit_extras.buy_me_a_coffee import button
 import streamlit_analytics
 from utils_viz import (line, 
                    scatter, 
@@ -75,4 +76,5 @@ if m_plot=='Histogram':
 if m_plot=='Ridgeline':
     ridgeline(df)
 
+button(username="fake-username", floating=False, width=221)
 streamlit_analytics.stop_tracking()
