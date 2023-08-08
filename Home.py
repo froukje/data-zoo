@@ -1,9 +1,11 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
+import streamlit_analytics
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import config
+streamlit_analytics.start_tracking()
 
 st.set_page_config(page_title="data app for data science and machine learning")
 
@@ -43,3 +45,4 @@ s = df.style.format(precision=3)\
       .set_properties(**properties)
 st.dataframe(s)
 
+streamlit_analytics.stop_tracking()

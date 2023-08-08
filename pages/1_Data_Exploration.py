@@ -1,10 +1,12 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
+import streamlit_analytics
 from utils_viz import (line, 
                    scatter, 
                    hist, 
                    hist_multiple,
                    ridgeline)
+streamlit_analytics.start_tracking()
 
 if "dataframe" in st.session_state:
     df=st.session_state["dataframe"]
@@ -72,3 +74,5 @@ if m_plot=='Histogram':
     hist_multiple(df)
 if m_plot=='Ridgeline':
     ridgeline(df)
+
+streamlit_analytics.stop_tracking()

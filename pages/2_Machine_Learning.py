@@ -1,11 +1,13 @@
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-
+import streamlit_analytics
 from utils_ml import (select_data,
                       preprocess_data,
                       scale,
                       train_valid_test_split,
                       rf_class)
+streamlit_analytics.start_tracking()
+
 if "dataframe" in st.session_state:
     df=st.session_state["dataframe"]
 
@@ -123,3 +125,4 @@ st.markdown("### :fire: IN PREPARATION :fire:")
 #            st.markdown(f"Test: {acc_test:.3f}")
 #    else:
 #        st.markdown("**Please select a target and input data before selecting a model.**")
+streamlit_analytics.stop_tracking()
