@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
+import numpy as np
 import mpld3
 import seaborn as sns
 import joypy
@@ -51,7 +52,7 @@ def select_vars(df, type='line'):
         sep_list)
     return x, y, sep 
 
-def select_vars_for_multiple_plots(df):
+def select_vars_for_multiple_plots(df, type_='group'):
     '''
     select variables to plot
     '''
@@ -62,15 +63,18 @@ def select_vars_for_multiple_plots(df):
 
     x_list = ['index']
     x_list.extend(list(set(df.columns.to_list()) - set(data_cols)))
-    col_x = st.selectbox(
+    if type_=='group':
+        col_x = st.selectbox(
             'Select a variable to group data',
             x_list)
-    if col_x == 'index':
-        by = None
-    else:
-        by = col_x
+        if col_x == 'index':
+            by = None
+        else:
+            by = col_x
 
-    return data_cols, by
+        return data_cols, by
+    if type_=='no_group':
+        return data_cols
 
 def line(df):
     '''
@@ -138,7 +142,7 @@ def ridgeline(df):
         st.markdown(explanations.RIDGELINE)
     
     st.markdown("Choose the variables you would like to plot")
-    data, by = select_vars_for_multiple_plots(df)
+    data, by = select_vars_for_multiple_plots(df, type_='group')
     try:
         # https://python-charts.com/distribution/ridgeline-plot-matplotlib/#:~:text=84%20Next-,Ridgeline%20plots%20with%20the%20joyplot%20function,variables%20of%20the%20data%20frame.
         fig, ax = joypy.joyplot(df, by=by, column=data)
@@ -147,5 +151,38 @@ def ridgeline(df):
 
     except:
         st.write("It is not possible to draw a Ridgeline plot")
+
+def hist_multiple(df):
+    '''
+    plot histograms of multiple variables in df
+    ::in params:: dataframe
+    '''
+    if st.checkbox("Show explanation for 'Historam'"):
+        st.markdown(explanations.HISTOGRAM)
+    
+    data = select_vars_for_multiple_plots(df, type_='no_group')
+    nr_vars = df[data].values.shape[1]
+    st.markdown('---')
+
+    if st.checkbox('All in one plot'):
+        try:
+            fig, ax = plt.subplots()
+            for i in range(nr_vars):
+                ax.hist(df[data].values[:, i], alpha=1/nr_vars)
+                fig_html = mpld3.fig_to_html(fig)
+                components.html(fig_html, height=600)
+        except:
+            st.write("It is not possible tp draw a histogram with the selected variable")
+
+    if st.checkbox('Multiple plots'):
+        rows = np.ceil(nr_vars/3)
+        try:
+            fig, axes = plt.suplots(rows, 3)
+            for i, ax in enumertae(axes.flatten()):
+                ax.hist(df[data].values[:, i], color=config.COLOR)
+            fig_html = mpld3.fig_to_html(fig)
+            components.html(fig_html, height=600)
+        except:
+            st.write("It is not possible tp draw a histogram with the selected variable")
 
 

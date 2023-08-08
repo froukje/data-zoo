@@ -1,18 +1,20 @@
 import streamlit as st
+from streamlit_extras.app_logo import add_logo
+
 from utils_ml import (select_data,
                       preprocess_data,
                       scale,
                       train_valid_test_split,
                       rf_class)
-
-st.sidebar.markdown("# Machine Learning")
-st.markdown("# Machine Learning")
-
 if "dataframe" in st.session_state:
     df=st.session_state["dataframe"]
 
+add_logo("images/datenraum_klein.png", height=50)
+st.sidebar.markdown("If you like this app, tell your friends and consider giving me a :star: Thank you! :yellow_heart:")
 
-st.markdown(":fire: **IN PREPARATION** :fire:")
+st.markdown("# Machine Learning")
+
+st.markdown("### :fire: IN PREPARATION :fire:")
 
 ## select data
 #if 'y_col' not in st.session_state:
