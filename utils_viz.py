@@ -122,10 +122,15 @@ def hist(df):
     x, y, sep = select_vars(df, type='hist')
 
     bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
+    stat = st.radio(
+        label="Aggregate statistic to compute in each bin",
+        options=('count', 'frequency', 'probability', 'density'),
+        help="count: number of observations in each bin; frequency: number of observations divided by the bin width; probability: normalize such that bar heights sum to 1; percent: normalize such that bar heights sum to 100; density: normalize such that the total area of the histogram equals 1; more info: https://seaborn.pydata.org/generated/seaborn.histplot.html",
+        horizontal=True)
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
-        sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins)
+        sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins, stat=stat)
         fig_html = mpld3.fig_to_html(fig)
         components.html(fig_html, height=600)
 
