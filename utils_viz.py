@@ -127,10 +127,31 @@ def hist(df):
         options=('count', 'frequency', 'probability', 'density'),
         help="count: number of observations in each bin; frequency: number of observations divided by the bin width; probability: normalize such that bar heights sum to 1; percent: normalize such that bar heights sum to 100; density: normalize such that the total area of the histogram equals 1; more info: https://seaborn.pydata.org/generated/seaborn.histplot.html",
         horizontal=True)
+    element = st.radio(
+            label='Visual representation of the histogram statistic',
+            options=('bars', 'step', 'poly'),
+            horizontal=True
+            )
+    cum = st_toggle_switch(
+            label="Plot the cumulative counts as bins increase",
+            default_value=False,
+            label_after=True,
+            inactive_color="#D3D3D3", 
+            active_color=config.COLOR,
+            track_color="#29B5E8",  
+            )
+    kde = st_toggle_switch(
+            label="compute a kernel density estimate to smooth the distribution",
+            default_value=False,
+            label_after=True,
+            inactive_color="#D3D3D3",
+            active_color=config.COLOR,
+            track_color="#29B5E8",  
+            )
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
-        sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins, stat=stat)
+        sns.histplot(data=df, x=x, y=y, hue=sep, bins=bins, stat=stat, cumulative=cum, element=element, kde=kde)
         fig_html = mpld3.fig_to_html(fig)
         components.html(fig_html, height=600)
 
