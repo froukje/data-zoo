@@ -16,8 +16,9 @@ def load_data(uploaded_file):
     if uploaded_file is None:
         #df = pd.read_csv(DATA_URL)
         sheets_url = st.secrets["public_gsheets_url"]
+        st.write(sheets_url)
         csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
-        df = pd.read_data(csv_url)
+        df = pd.read_csv(csv_url)
         #(st.secrets["public_gsheets_url"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
