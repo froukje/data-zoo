@@ -119,7 +119,7 @@ def hist(df):
     if st.checkbox("Show explanation for 'Histogram'"):
         st.markdown(explanations.HISTOGRAM)
 
-    x, y, sep = select_vars(df, type='hist')
+    y, x, sep = select_vars(df, type='hist')
 
     bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
     stat = st.radio(
@@ -148,6 +148,18 @@ def hist(df):
             active_color=config.COLOR,
             track_color="#29B5E8",  
             )
+    hz = st_toggle_switch(
+            label="switch x and y axis",
+            default_value=False,
+            label_after=True,
+            inactive_color="#D3D3D3",
+            active_color=config.COLOR,
+            track_color="#29B5E8",
+            )
+    if hz:
+        xx = y
+        y = x
+        x = xx
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
