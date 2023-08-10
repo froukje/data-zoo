@@ -15,7 +15,10 @@ def load_data(uploaded_file):
     #DATA_URL = 'data/water_potability.csv'
     if uploaded_file is None:
         #df = pd.read_csv(DATA_URL)
-        df = load_data(st.secrets["public_gsheets_url"])
+        sheets_url = st.secrets["public_gsheets_url"]
+        csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+        df = pd.read_data(csv_url)
+        #(st.secrets["public_gsheets_url"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
     return df
