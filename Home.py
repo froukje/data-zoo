@@ -12,9 +12,10 @@ st.set_page_config(page_title="data app for data science and machine learning")
 
 @st.cache_data(ttl=24*3600)
 def load_data(uploaded_file):
-    DATA_URL = 'data/water_potability.csv'
+    #DATA_URL = 'data/water_potability.csv'
     if uploaded_file is None:
-        df = pd.read_csv(DATA_URL)
+        #df = pd.read_csv(DATA_URL)
+        df = load_data(st.secrets["public_gsheets_url"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
     return df
