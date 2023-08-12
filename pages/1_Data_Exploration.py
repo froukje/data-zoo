@@ -76,5 +76,6 @@ if m_plot=='Histogram':
 if m_plot=='Ridgeline':
     ridgeline(df)
 
-button(username="fake-username", floating=False, width=221)
+with st.sidebar:
+    button(username="pumaline", floating=False, width=221)
 streamlit_analytics.stop_tracking()

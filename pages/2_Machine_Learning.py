@@ -126,5 +126,6 @@ st.markdown("### :fire: IN PREPARATION :fire:")
 #            st.markdown(f"Test: {acc_test:.3f}")
 #    else:
 #        st.markdown("**Please select a target and input data before selecting a model.**")
-button(username="fake-username", floating=False, width=221)
+with st.sidebar:
+    button(username="pumaline", floating=False, width=221)
 streamlit_analytics.stop_tracking()

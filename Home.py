@@ -54,5 +54,6 @@ s = df.style.format(precision=3)\
 st.dataframe(s)
 
 
-button(username="pumaline", floating=False, width=221)
+with st.sidebar:
+    button(username="pumaline", floating=False, width=221)
 streamlit_analytics.stop_tracking()
