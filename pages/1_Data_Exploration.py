@@ -41,11 +41,11 @@ plot_type_single = ['','Linechart', 'Scatterplot', 'Histogram']
 plot_type_multiple = ['', 'Histogram', 'Ridgeline']
 st.sidebar.markdown("**Plot one or two Variables**")
 s_plot = st.sidebar.selectbox(
-            'Select a Plot Type',
+            'Select a Plot Type for a single plot',
             plot_type_single)
 st.sidebar.markdown("**Plot Multiple Variables**")
 m_plot = st.sidebar.selectbox(
-            'Select a Plot Type',
+        'Select a Plot Type for multiple plots',
             plot_type_multiple)
 
 st.sidebar.markdown("If you like this app, tell your friends and consider giving me a :star: Thank you! :yellow_heart:")
