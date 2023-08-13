@@ -91,69 +91,100 @@ def line(df):
     '''
     if st.checkbox("Show explanation for 'Linechart'"):
         st.markdown(explanations.LINECHART)
-    x, y, sep = select_vars(df, type='line')
-    if x == 'index':
-        x = df.index
+    # get variables
+    st.session_state["x"], st.session_state["y"], st.session_state["sep"] = select_vars(df, type='line')
+    if st.session_state["x"] == 'index':
+        st.session_state["x"] = df.index
     else:
-        x = df[x].values
-    y = df[y].values
+        st.session_state["x"] = df[st.session_state["x"]].values
+    st.session_state["y"] = df[st.session_state["y"]].values
     
-    level_param = 95
-    errorbar = ('ci', level_param)
-    err_style = 'band'
+    if "level_param" not in st.session_state: 
+        st.session_state["level_param"] = 95
+    if "errorbar" not in st.session_state:
+        st.session_state["errorbar"] = ('ci', st.session_state["level_param"])
+    if "err_style" not in st.session_state:
+        st.session_state["err_style"] = 'band'
     if st.checkbox("Errorbar options"):
-        st.markdown("The errorbar aggregates over repeated values (for the x axis) and shows the mean and Percentage chosen as confidence interval for ('ci', Percentage). More information: https://seaborn.pydata.org/tutorial/error_bars.html") 
-        level_param = st.slider('Percentage of errorbar shown', min_value=0, max_value=100, step=5, value=95, help="select percentage of for errorbar")
-        errorbar = st.radio(label='What type of error bar?', 
-                options=(('ci', level_param), ('pi', level_param), ('se', level_param), ('sd', level_param)),
+        st.markdown(explanations.ERRORLINE)
+        st.session_state["level_param"] = st.slider('Percentage of errorbar shown', 
+                min_value=0, max_value=100, step=5, value=95, 
+                help="select percentage of for errorbar")
+        st.session_state["errorbar"] = st.radio(label='What type of error bar?', 
+                options=(('ci', st.session_state["level_param"]), ('pi', st.session_state["level_param"]), ('se', st.session_state["level_param"]), ('sd', st.session_state["level_param"])),
                 horizontal=True,
                 help="(error bar method, percentage of error shown); https://seaborn.pydata.org/generated/seaborn.lineplot.html")
-        err_style = st.radio(
+        st.session_state["err_style"] = st.radio(
                 label="Error bar style",
                 options=('band', 'bars'),
                 horizontal=True,
                 help="style of the errorbars")
-   
-    mark = None        
-    xmin = int(np.nanmin(x))
-    xmax = int(np.nanmax(x))
-    ymin = int(np.nanmin(y))
-    ymax = int(np.nanmax(y))
+  
+    if "marker" not in st.session_state:
+        st.session_state["marker"] = 'None'
+    if "marker_show" not in st.session_state:
+        st.session_state["marker_show"] = None
+    if "xmin" not in st.session_state:
+        st.session_state["xmin"] = int(np.nanmin(st.session_state["x"]))
+        st.session_state["xmax"] = int(np.nanmax(st.session_state["x"]))
+        st.session_state["ymin"] = int(np.nanmin(st.session_state["y"]))
+        st.session_state["ymax"] = int(np.nanmax(st.session_state["y"]))
+    if "orient" not in st.session_state:
+        st.session_state["orient"] = False
     if st.checkbox("Other plot options"):
-        marker = st.radio(label='Show markers on the line', options=('None', 'point', 'circle', 'star', 'cross'), horizontal=True)
-        if marker == 'None':
-            mark = None
-        if marker == 'point':
-            mark = '.'
-        if marker == 'circle':
-            mark = 'o'
-        if marker == 'star':
-            mark = '*'
-        if marker == 'cross':
-            mark = 'x'
-        orient = st_toggle_switch(
+        value = list(config.MARKER_DICT.keys()).index(st.session_state["marker"])
+        marker = st.radio(label='Show markers on the line', 
+                options=config.MARKER_DICT.keys(), 
+                horizontal=True, 
+                index=value)
+        st.session_state["marker_show"] = config.MARKER_DICT[marker]
+        st.session_state["marker"] = marker
+        change = st_toggle_switch(
                 label="Change orientation",
-                default_value=False,
+                default_value=False, #st.session_state["orient"],
                 label_after=True,
                 inactive_color=config.COLOR_INACTIVE,
                 active_color=config.COLOR,
                 track_color=config.COLOR_TRACK
                 )
-        if orient:
-            xx = x
-            x = y
-            y = xx
-        xmin = st.slider(label="Minimum for x-axis", min_value=int(np.nanmin(x)), max_value=int(np.nanmax(x)), step=stepsize(x), value=int(np.nanmin(x)), help="select minimum value for x axis")
-        xmax = st.slider(label="Maximun for x-axis", min_value=int(np.nanmin(x)), max_value=int(np.nanmax(x)), step=stepsize(x), value=int(np.nanmax(x)), help="select maximum value for x axis")
-        ymin = st.slider(label="Minimum for y-axis", min_value=int(np.nanmin(y)), max_value=int(np.nanmax(y)), step=stepsize(y), value=int(np.nanmin(y)), help="select minimum value for y axis")
-        ymax = st.slider(label="Maximun for x-axis", min_value=int(np.nanmin(y)), max_value=int(np.nanmax(y)), step=stepsize(y), value=int(np.nanmax(y)), help="select maximum value for y axis")
+        st.session_state["orient"] = change
+        if change:
+            xx = st.session_state["x"]
+            st.session_state["x"] = st.session_state["y"]
+            st.session_state["y"] = xx
+        st.session_state["xmin"] = st.slider(label="Minimum for x-axis", 
+                min_value=int(np.nanmin(st.session_state["x"])), 
+                max_value=int(np.nanmax(st.session_state["x"])), 
+                step=stepsize(st.session_state["x"]), 
+                value=st.session_state["xmin"], 
+                help="select minimum value for x axis")
+        st.session_state["xmax"] = st.slider(label="Maximun for x-axis", 
+                min_value=int(np.nanmin(st.session_state["x"])), 
+                max_value=int(np.nanmax(st.session_state["x"])), 
+                step=stepsize(st.session_state["x"]), 
+                value=st.session_state["xmax"], 
+                help="select maximum value for x axis")
+        st.session_state["ymin"] = st.slider(label="Minimum for y-axis", 
+                min_value=int(np.nanmin(st.session_state["y"])), 
+                max_value=int(np.nanmax(st.session_state["y"])), 
+                step=stepsize(st.session_state["y"]), 
+                value=st.session_state["ymin"], 
+                help="select minimum value for y axis")
+        st.session_state["ymax"] = st.slider(label="Maximun for x-axis", 
+                min_value=int(np.nanmin(st.session_state["y"])), 
+                max_value=int(np.nanmax(st.session_state["y"])), 
+                step=stepsize(st.session_state["y"]), 
+                value=st.session_state["ymax"], 
+                help="select maximum value for y axis")
  
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
-        sns.lineplot(data=df, y=y, x=x, hue=sep, ax=ax, marker=mark, errorbar=errorbar) #, err_stype=err_style)
-        ax.set_xlim(xmin, xmax)
-        ax.set_ylim(ymin, ymax)
+        sns.lineplot(data=df, y=st.session_state["y"], x=st.session_state["x"], 
+                hue=st.session_state["sep"], ax=ax, marker=st.session_state["marker_show"], 
+                errorbar=st.session_state["errorbar"]) #, err_stype=st.session_state["err_style"])
+        ax.set_xlim(st.session_state["xmin"], st.session_state["xmax"])
+        ax.set_ylim(st.session_state["ymin"], st.session_state["ymax"])
         fig_html = mpld3.fig_to_html(fig)
         components.html(fig_html, height=600)
     except:
