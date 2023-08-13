@@ -38,7 +38,7 @@ def select_vars(df, type='line'):
 
     sns.set_palette(config.PALETTE)
     if col_x == 'index':
-        x = df.index
+        x = 'index' 
     else:
         x = col_x
 
@@ -74,6 +74,16 @@ def select_vars_for_multiple_plots(df, type_='group'):
     if type_=='no_group':
         return data_cols
 
+def stepsize(x):
+    min_ = np.nanmin(x)
+    max_ = np.nanmax(x)
+    diff = (max_ - min_)
+    if diff <= 100:
+        step = 1
+    else:
+        step = int(diff / 100)
+    return step
+
 def line(df):
     '''
     draw a linechart 
@@ -82,11 +92,68 @@ def line(df):
     if st.checkbox("Show explanation for 'Linechart'"):
         st.markdown(explanations.LINECHART)
     x, y, sep = select_vars(df, type='line')
-
+    if x == 'index':
+        x = df.index
+    else:
+        x = df[x].values
+    y = df[y].values
+    
+    level_param = 95
+    errorbar = ('ci', level_param)
+    err_style = 'band'
+    if st.checkbox("Errorbar options"):
+        st.markdown("The errorbar aggregates over repeated values (for the x axis) and shows the mean and Percentage chosen as confidence interval for ('ci', Percentage). More information: https://seaborn.pydata.org/tutorial/error_bars.html") 
+        level_param = st.slider('Percentage of errorbar shown', min_value=0, max_value=100, step=5, value=95, help="select percentage of for errorbar")
+        errorbar = st.radio(label='What type of error bar?', 
+                options=(('ci', level_param), ('pi', level_param), ('se', level_param), ('sd', level_param)),
+                horizontal=True,
+                help="(error bar method, percentage of error shown); https://seaborn.pydata.org/generated/seaborn.lineplot.html")
+        err_style = st.radio(
+                label="Error bar style",
+                options=('band', 'bars'),
+                horizontal=True,
+                help="style of the errorbars")
+   
+    mark = None        
+    xmin = int(np.nanmin(x))
+    xmax = int(np.nanmax(x))
+    ymin = int(np.nanmin(y))
+    ymax = int(np.nanmax(y))
+    if st.checkbox("Other plot options"):
+        marker = st.radio(label='Show markers on the line', options=('None', 'point', 'circle', 'star', 'cross'), horizontal=True)
+        if marker == 'None':
+            mark = None
+        if marker == 'point':
+            mark = '.'
+        if marker == 'circle':
+            mark = 'o'
+        if marker == 'star':
+            mark = '*'
+        if marker == 'cross':
+            mark = 'x'
+        orient = st_toggle_switch(
+                label="Change orientation",
+                default_value=False,
+                label_after=True,
+                inactive_color=config.COLOR_INACTIVE,
+                active_color=config.COLOR,
+                track_color=config.COLOR_TRACK
+                )
+        if orient:
+            xx = x
+            x = y
+            y = xx
+        xmin = st.slider(label="Minimum for x-axis", min_value=int(np.nanmin(x)), max_value=int(np.nanmax(x)), step=stepsize(x), value=int(np.nanmin(x)), help="select minimum value for x axis")
+        xmax = st.slider(label="Maximun for x-axis", min_value=int(np.nanmin(x)), max_value=int(np.nanmax(x)), step=stepsize(x), value=int(np.nanmax(x)), help="select maximum value for x axis")
+        ymin = st.slider(label="Minimum for y-axis", min_value=int(np.nanmin(y)), max_value=int(np.nanmax(y)), step=stepsize(y), value=int(np.nanmin(y)), help="select minimum value for y axis")
+        ymax = st.slider(label="Maximun for x-axis", min_value=int(np.nanmin(y)), max_value=int(np.nanmax(y)), step=stepsize(y), value=int(np.nanmax(y)), help="select maximum value for y axis")
+ 
     try:
         fig, ax = plt.subplots()
         sns.set_palette(config.PALETTE)
-        sns.lineplot(data=df, y=y, x=x, hue=sep, ax=ax)
+        sns.lineplot(data=df, y=y, x=x, hue=sep, ax=ax, marker=mark, errorbar=errorbar) #, err_stype=err_style)
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
         fig_html = mpld3.fig_to_html(fig)
         components.html(fig_html, height=600)
     except:
@@ -136,25 +203,25 @@ def hist(df):
             label="Plot the cumulative counts as bins increase",
             default_value=False,
             label_after=True,
-            inactive_color="#D3D3D3", 
+            inactive_color=config.COLOR_INACTIVE, 
             active_color=config.COLOR,
-            track_color="#29B5E8",  
+            track_color=config.COLOR_TRACK,  
             )
     kde = st_toggle_switch(
             label="compute a kernel density estimate to smooth the distribution",
             default_value=False,
             label_after=True,
-            inactive_color="#D3D3D3",
+            inactive_color=config.COLOR_INACTIVE,
             active_color=config.COLOR,
-            track_color="#29B5E8",  
+            track_color=config.COLOR_TRACK,  
             )
     hz = st_toggle_switch(
             label="switch x and y axis",
             default_value=False,
             label_after=True,
-            inactive_color="#D3D3D3",
+            inactive_color=config.COLOR_INACTIVE,
             active_color=config.COLOR,
-            track_color="#29B5E8",
+            track_color=config.COLOR_TRACK,
             )
     if hz:
         xx = y
@@ -207,9 +274,9 @@ def hist_multiple(df):
         key="one_plot",
         default_value=False,
         label_after=False,
-        inactive_color="#D3D3D3",  # optional
+        inactive_color=config.COLOR_INACTIVE,  # optional
         active_color=config.COLOR,  # optional
-        track_color="#29B5E8",  # optional
+        track_color=config.COLOR_TRACK,  # optional
     )
     if hist_switch:
         try:
