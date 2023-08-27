@@ -324,15 +324,15 @@ def hist_multiple(df):
     else:
         rows = int(np.ceil(nr_vars/3))
         try:
-            fig = plt.figure()
+            fig = plt.figure(figsize=(15, rows*5))
             plt.subplots_adjust(hspace=0.5)
             sns.set_palette(config.PALETTE)
             bins = st.slider('nr. of bins', min_value=5, max_value=100, step=5, value=20, help="select the nr. of bins for the histogram")
             for i in range(nr_vars):
-                ax = plt.subplot(rows, 3, i+1)
+                n = rows*100 + 30 + i + 1
+                ax = plt.subplot(n)#plt.subplots(rows, 3, figsize=(rows*5, 15))
                 sns.histplot(data=df[data].values[:, i], color=config.COLOR, ax=ax, alpha=alpha, bins=bins)
-            fig_html = mpld3.fig_to_html(fig)
-            components.html(fig_html, height=200*rows)
+            st.pyplot(fig)
         except:
             st.write("It is not possible to draw a histogram with the selected variable")
 
